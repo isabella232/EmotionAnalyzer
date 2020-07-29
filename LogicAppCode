@@ -1,0 +1,113 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Detect_faces": {
+                "inputs": {
+                    "body": {
+                        "url": "https://emotionimagestorage.blob.core.windows.net/images/@{triggerBody()?['Name']}"
+                    },
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['faceapi']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/face/v1.0/detect",
+                    "queries": {
+                        "returnFaceAttributes": "age,gender,headPose,smile,facialHair,glasses",
+                        "returnFaceId": "true",
+                        "returnFaceLandmarks": "true"
+                    }
+                },
+                "runAfter": {},
+                "type": "ApiConnection"
+            },
+            "For_each_2": {
+                "actions": {
+                    "Create_blob": {
+                        "inputs": {
+                            "body": "Image Info:\nAge: @{items('For_each_2')?['faceAttributes']?['age']};  Gender: @{items('For_each_2')?['faceAttributes']?['gender']}; Smile Score: @{items('For_each_2')?['faceAttributes']?['smile']}",
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['azureblob']['connectionId']"
+                                }
+                            },
+                            "method": "post",
+                            "path": "/datasets/default/files",
+                            "queries": {
+                                "folderPath": "/data",
+                                "name": "@triggerBody()?['Name']",
+                                "queryParametersSingleEncoded": true
+                            }
+                        },
+                        "runAfter": {},
+                        "runtimeConfiguration": {
+                            "contentTransfer": {
+                                "transferMode": "Chunked"
+                            }
+                        },
+                        "type": "ApiConnection"
+                    }
+                },
+                "foreach": "@body('Detect_faces')",
+                "runAfter": {
+                    "Detect_faces": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Foreach"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "When_a_blob_is_added_or_modified_(properties_only)_2": {
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['azureblob']['connectionId']"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/datasets/default/triggers/batch/onupdatedfile",
+                    "queries": {
+                        "folderId": "JTJmaW1hZ2Vz",
+                        "maxFileCount": 1
+                    }
+                },
+                "metadata": {
+                    "JTJmaW1hZ2Vz": "/images"
+                },
+                "recurrence": {
+                    "frequency": "Second",
+                    "interval": 10
+                },
+                "splitOn": "@triggerBody()",
+                "type": "ApiConnection"
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "azureblob": {
+                    "connectionId": "/subscriptions/16a88870-e2d4-4a02-a53d-90a674336ed0/resourceGroups/myResourceGroup/providers/Microsoft.Web/connections/azureblob",
+                    "connectionName": "azureblob",
+                    "id": "/subscriptions/16a88870-e2d4-4a02-a53d-90a674336ed0/providers/Microsoft.Web/locations/southeastasia/managedApis/azureblob"
+                },
+                "faceapi": {
+                    "connectionId": "/subscriptions/16a88870-e2d4-4a02-a53d-90a674336ed0/resourceGroups/myResourceGroup/providers/Microsoft.Web/connections/faceapi-2",
+                    "connectionName": "faceapi-2",
+                    "id": "/subscriptions/16a88870-e2d4-4a02-a53d-90a674336ed0/providers/Microsoft.Web/locations/southeastasia/managedApis/faceapi"
+                }
+            }
+        }
+    }
+}
