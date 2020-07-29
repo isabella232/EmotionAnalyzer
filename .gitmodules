@@ -1,0 +1,3 @@
+[submodule "azure-sdk-for-js-storage-blob-stream-nodejs"]
+	path = azure-sdk-for-js-storage-blob-stream-nodejs
+	url = https://github.com/lisajl/azure-sdk-for-js-storage-blob-stream-nodejs.git
