@@ -24,7 +24,7 @@ The first part of the project is creating the web app that allows users to uploa
 
 1. Go to [portal.azure.com](portal.azure.com). Log in to your account if you haven't already. Once you are at the home page, click the button near the top right that looks like a box with `>_` in it. This will open Azure Cloud Shell, an environment where you can type commands to create resources and deploy apps.  
 
-   ![screenshot](readme images/cloudshellicon.png)
+   ![cloudshellicon](C:\Users\Lisa\Documents\GitHub\EmotionAnalyzer\readme images\cloudshellicon.png)
 
 2. Once you click the button, a black window should open up at the bottom of the page. Select Bash instead of Power Shell for the environment. At this point, your screen should look like this. 
 
