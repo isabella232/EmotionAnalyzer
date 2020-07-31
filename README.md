@@ -28,7 +28,7 @@ The first part of the project is creating the web app that allows users to uploa
 
 2. Once you click the button, a black window should open up at the bottom of the page. Select Bash instead of Power Shell for the environment. At this point, your screen should look like this. 
 
-   ![](images\cloudterminal.png)
+   ![](images/cloudterminal.png)
 
 3. Once you're in the terminal, the rest of the steps involve you copying code and entering those commands into the Cloud Shell. These lines of code will create Resource Groups, containers, and deploy web apps for you. All the names of these different types of resources are totally up to you! I put in default names that are recognizable in all caps, but you can choose any name you want. In the first bit, you can change the name from `MYRESOURCEGROUP` to anything you want. It's up to you `:)`!  Just make sure that you keep this consistent with all the other code commands. For example, if you name this resource group `GodsResourceGroup` you must refer to the resource group as `GodsResourceGroup` in all other code commands. To start off, create a resource group by copying this line of code and entering: 
 
