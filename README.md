@@ -36,7 +36,7 @@ The first part of the project is creating the web app that allows users to uploa
 
    You will know it will have worked if you receive back a message that looks like this:
 
-   ![](images/Screenshot (134).png)
+   ![](images/cterm.png)
 
    The "provisioningState" should have the status of "Succeeded". 
 
@@ -84,7 +84,7 @@ The first part of the project is creating the web app that allows users to uploa
 
 10. That's all the copying and pasting for now! To make sure it all worked, visit your website and see if you can upload a photo. To do that, just go to WEBAPP.azurewebsites.net, but replace WEBAPP with whichever name you chose for the Web App. Here's what mine looks like:
 
-    ![](images/Screenshot (136).png)
+    ![](images/webapp.png)
 
 11. If you can see that page, try and upload an image. Then, refresh your Azure portal page, and go to your storage container labeled images. You should see the image! If you can see the image, great job! We can move on.
 
@@ -96,49 +96,49 @@ Now that you've created a website where you can upload photos and they'll be pla
 
 1. Start by creating a logic app. At the home page for the Microsoft Azure Portal, press `+` to create a new resource. 
 
-   ![](images/Screenshot (137).png)
+   ![](images/add.png)
 
    Search for "logic app." Click on the first result and click `create`. 
 
-   ![](images/Screenshot (138).png)
+   ![](images/logic.png)
 
 2. Configure the details of the Logic App. Make sure you choose the same resource group as the one from Part 1, and choose any name for the Logic App. Press `Review+Create` when you're done and then finally press `Create` after that.
 
-   ![](images\Screenshot (139).png)
+   ![](images/logicapps.png)
 
    Once created, it should tell you that the Logic App is being deployed. Eventually, it should tell you that the Logic App has been successfully deployed too. 
 
 3. Next, we need to make a Face API resource. Click the `+` again, but this time search for Face. Click the first result, create, and follow the same process as before. (Make sure it goes to the same Resource Group, using same subscription, choose name, etc.) 
 
-   ![](images\Screenshot (140).png)
+   ![](images/chooser.png)
 
 4. Once the Face API is deployed, click `go to resource`.  This should take you to a page with a menu of lots of options. Click Keys and Endpoints. Within that there should be a page with Key 1 and Key 2. In an external document or note, anywhere on your PC, really, copy Key 1. Keep this secret and have it on hand, we'll need it for later steps! Also copy the endpoint and put that in the notes, which is displayed below the keys.
 
-   ![](images\Screenshot (141).png)
+   ![](images/keys.png)
 
 5. Return to the Logic App you made. While you can copy and paste the code from the GitHub into Logic Apps, it will be much easier to simply create the Logic App through the Designer yourself, instead of having to change all the information so it works with your apps. So, go to Logic App designer in the left hand menu. Once there, press the `+` button to add a trigger. 
 
-   ![](images\snipp.PNG)
+   ![](images/snipp.PNG)
 
    Choose When a blob is added or modified, as seen above. Configure the trigger so that the logic app runs when 1 blob is added to the `images` container and have the trigger check every 10 seconds.
 
-   ![](images\connections.PNG)
+   ![](images/connections.PNG)
 
    If done successfully, it should look like this once the trigger is finished.
 
 6. For the 2nd step in the Logic App, we need to connect the Face API. While previously for the trigger you basically just had to name the connection, this will require the entering of the API key from before. Once you copy and paste the key, you should create a connection for the step. From there, simply paste the image URL (composed of the website url + `List of Files Name` )
 
-   ![](images\facedetect.PNG)
+   ![](images/facedetect.PNG)
 
    The `List of Files Name` will be considered Dynamic Content, and will show up as a dropdown menu available when entering in the URL.
 
 7. Before we move on to the last step in making the Logic App, we must first make a third storage container in the original storage account. Go back to the storage account, click containers, and now create a third storage container, this time with the name "data" and the access level as container. 
 
-   ![](images\containers.PNG)
+   ![](images/containers.PNG)
 
 8. Now, the last step for the Logic App is to make an action that responds to each `body` that the Face API detects. For each `body` ,  choose the action to have a blob created with information about the image to be sent to the data container. 
 
-   ![](images\foreach.PNG)
+   ![](images/foreach.PNG)
 
    Make sure the blob name is `List of Files Name`. This will be important to easily locate the data you got from the Face API! 
 
@@ -152,23 +152,23 @@ Finally! I promise you though, this will be the shortest part in this project tu
 
 1. Go to [chrome://extensions](chrome://extensions) in Google Chrome (duh). From there, turn on developer mode in the corner. This should turn the button from gray to blue.
 
-    ![](images\devmode.PNG)  This is what it should look like on. It is, in fact, blue. 
+    ![](images/devmode.PNG)  This is what it should look like on. It is, in fact, blue. 
 
 2. Next, go to the GitHub page above and download the Emotion Extension folder to your desktop. Open it in Visual Studio. 
 
-   ![](images/Screenshot (145).png)
+   ![](images/vs.png)
 
    You should see something like this!
 
 3. Now, go back to the Chrome Extensions tab. In the left hand corner, there will be a button saying `Load Unpacked` . Click it, then select the Emotion Extension folder. 
 
-   ![](images\loadunpacked.PNG)
+   ![](images/loadunpacked.PNG)
 
    Once selected, confirm and an extension should show up! Toggle it on. 
 
 4. Now that the extension is unpacked to your Chrome browser, all you have left to do is customize it to work with the websites you made. In Visual Studio, click the HTML file, if you are not already on it. You only have to change 3 URLs to get the extension to work, buuut you can optionally change the styling in the first bit in the HTML file. That includes sizes of fonts, descriptions, coloring, etc. 
 
-   ![](images\Screenshot (146).png)
+   ![](images\vs2.png)
 
    Scroll past the styling if you don't want to change it until you get to the code line that says `<div class = "modal-content">`. Below this, there are 3 clear hyperlinks. For the first one, put down the storage account URL to the actual blob container. For example, if your storage account was named myhomegarage, the URL would be https://myhomegarage.blob.core.windows.net/data/. Whatever it is, replace the original URL with the one for your storage account. Replace the 3rd URL too. 
 
@@ -176,11 +176,11 @@ Finally! I promise you though, this will be the shortest part in this project tu
 
 5. Once those 3 URLs are replaced, you're good! Simply left click and click on `View in Browser (Google Chrome)`.  This will update the Chrome extension with your new edits!
 
-   ![](images\Screenshot (148).png)
+   ![](images/vs3.png)
 
 6. YOU'RE DONE! Now, when you click the little icon in the extensions menu on the top right of your Chrome Browser, a small menu page will show with links and instructions to analyze any photo. If you click the icons, they should take you to the Azure Websites you made and allow you to access the photo analysis information the Website garners. 
 
-   ![](images\extensionsss.PNG)
+   ![](images/extensionsss.PNG)
 
 
 
