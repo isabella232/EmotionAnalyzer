@@ -120,7 +120,7 @@ Now that you've created a website where you can upload photos and they'll be pla
 
 5. Return to the Logic App you made. While you can copy and paste the code from the GitHub into Logic Apps, it will be much easier to simply create the Logic App through the Designer yourself, instead of having to change all the information, keys, and connections so it works with your apps. So, go to Logic App designer in the left hand menu. Once there, press the `+` button to add a trigger. 
 
-   ![](images/eventrig.PNG)
+   ![](images/eventrig.png)
 
    Choose Event Grid trigger to pick when a resource event occurs. Make sure it's connected to the right storage account where blobs go to when you upload images! When it's done, it should look something like the image above.
 
@@ -150,7 +150,7 @@ Now that you've created a website where you can upload photos and they'll be pla
 
 11. Switch to code view! Up until this point, we have used Logic App Designer. However, to have your Face API detect emotions, we must modify the code slightly.  Inside code view, go to line 20. Under this line, the Face API is told to gather information from the photo. Under the default steps added by the Logic App's detect faces command, age, gender, head pose, smile, facial hair, and glasses are automatically detected. Add emotion to this list. 
 
-    ![](images/snippet.png)
+    ![](images/snippet.PNG)
 
 12. Under line 36, now we need to make the blob actually display all the emotions you want displayed. Simply copy and paste this line of code to replace the old one, and your body will now show many more emotions. 
 
