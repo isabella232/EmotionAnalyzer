@@ -118,33 +118,51 @@ Now that you've created a website where you can upload photos and they'll be pla
 
    ![](images/keys.png)
 
-5. Return to the Logic App you made. While you can copy and paste the code from the GitHub into Logic Apps, it will be much easier to simply create the Logic App through the Designer yourself, instead of having to change all the information so it works with your apps. So, go to Logic App designer in the left hand menu. Once there, press the `+` button to add a trigger. 
+5. Return to the Logic App you made. While you can copy and paste the code from the GitHub into Logic Apps, it will be much easier to simply create the Logic App through the Designer yourself, instead of having to change all the information, keys, and connections so it works with your apps. So, go to Logic App designer in the left hand menu. Once there, press the `+` button to add a trigger. 
 
-   ![](images/snipp.PNG)
+   ![](images/eventrig.PNG)
 
-   Choose When a blob is added or modified, as seen above. Configure the trigger so that the logic app runs when 1 blob is added to the `images` container and have the trigger check every 10 seconds.
+   Choose Event Grid trigger to pick when a resource event occurs. Make sure it's connected to the right storage account where blobs go to when you upload images! When it's done, it should look something like the image above.
 
-   ![](images/connections.PNG)
+6. Next, add a condition to your logic app. To do this, click the `+` button, and select `control`. Then, pick the condition option. Enter in the condition for the logic app to react if a blob is created. Once done, it should look like this:
 
-   If done successfully, it should look like this once the trigger is finished.
+   ![](images/condition.png)
 
-6. For the 2nd step in the Logic App, we need to connect the Face API. While previously for the trigger you basically just had to name the connection, this will require the entering of the API key from before. Once you copy and paste the key, you should create a connection for the step. From there, simply paste the image URL (composed of the website url + `List of Files Name` )
+7. Under the `If true` bar that is created from the condition, we need to select a trigger for all the actions to happen. Even though the function has already been triggered, adding a blob trigger allows you to refer to the right blobs in future steps. So, choose the trigger under `Azure Blob Storage` for a blob to be created. Make sure it responds when 1 blob is created. (Now, that means the function will work every time a file is uploaded!)
+
+   ![](images/iftrueblob.png)
+
+8. For the 2nd step under the `If true` condition, we need to connect the Face API. While previously for the trigger you basically just had to name the connection, this will require the entering of the API key from before. Once you copy and paste the key, you should create a connection for the step. From there, simply paste the image URL (composed of the website url + `List of Files Name` )
 
    ![](images/facedetect.PNG)
 
    The `List of Files Name` will be considered Dynamic Content, and will show up as a dropdown menu available when entering in the URL.
 
-7. Before we move on to the last step in making the Logic App, we must first make a third storage container in the original storage account. Go back to the storage account, click containers, and now create a third storage container, this time with the name "data" and the access level as container. 
+9. Before we move on to the last step in making the Logic App, we must first make a third storage container in the original storage account. Go back to the storage account, click containers, and now create a third storage container, this time with the name "data" and the access level as container. 
 
    ![](images/containers.PNG)
 
-8. Now, the last step for the Logic App is to make an action that responds to each `body` that the Face API detects. For each `body` ,  choose the action to have a blob created with information about the image to be sent to the data container. 
+10. Now, the last step for the Logic App is to make an action that responds to each `body` that the Face API detects. For each `body` ,  choose the action to have a blob created. Simply put Image Info within the blob for now. 
 
-   ![](images/foreach.PNG)
+   ![](images/earlyblob.PNG)
 
    Make sure the blob name is `List of Files Name`. This will be important to easily locate the data you got from the Face API! 
 
-At this point, if you followed everything correctly, you will now have a working Logic App that lets the Face API analyze the image uploaded and respond by giving back data about the image. To test it, press `Run` and then upload an image to the website you created. You should receive a check for each of the steps. Finally, go to the data storage container and make sure a blob was created with the right information. If it's there, great job!! We can move on to the last and final part of this project.
+   For all the blob content, `Name`, `Age`,`Gender`,`Moustache`, and `Beard` will show up as dynamic content that you can simply choose from the dropdown menu inside the portal. However, for the emotions, there is a more complicated process.
+
+11. Switch to code view! Up until this point, we have used Logic App Designer. However, to have your Face API detect emotions, we must modify the code slightly.  Inside code view, go to line 20. Under this line, the Face API is told to gather information from the photo. Under the default steps added by the Logic App's detect faces command, age, gender, head pose, smile, facial hair, and glasses are automatically detected. Add emotion to this list. 
+
+    ![](images/codesnip.png)
+
+12. Under line 36, now we need to make the blob actually display all the emotions you want displayed. Simply copy and paste this line of code to replace the old one, and your body will now show many more emotions. 
+
+    ` "body": "Image Info for @{triggerBody()?['Name']}:\n\nAge: @{items('For_each')?['faceAttributes']?['age']}; \nGender: @{items('For_each')?['faceAttributes']?['gender']}; \n\nEmotion Scores: \nHappiness: @{items('For_each')?['faceAttributes']?['emotion']?['happiness']}\nSadness: @{items('For_each')?['faceAttributes']?['emotion']?['sadness']}\nAnger: @{items('For_each')?['faceAttributes']?['emotion']?['anger']}\nContempt: @{items('For_each')?['faceAttributes']?['emotion']?['contempt']}\nFear: @{items('For_each')?['faceAttributes']?['emotion']?['fear']}\nDigust: @{items('For_each')?['faceAttributes']?['emotion']?['disgust']}\nSurprise: @{items('For_each')?['faceAttributes']?['emotion']?['surprise']}\nNeutral: @{items('For_each')?['faceAttributes']?['emotion']?['neutral']};\n\nOther Info:\nMoustache Intensity: @{items('For_each')?['faceAttributes']?['facialHair']?['moustache']}\nBeard Intensity: @{items('For_each')?['faceAttributes']?['facialHair']?['beard']}\nGlasses: @{items('For_each')?['faceAttributes']?['glasses']};",`
+
+    Then save! Finally,go back to Logic App designer. When you click under the blob action, your code should look like this. 
+
+    ![](images/newforeach.png)
+
+Woohoo! At this point, if you followed everything correctly, you will now have a working Logic App that lets the Face API analyze the image uploaded and respond by giving back data about the image. To test it, press `Run` and then upload an image to the website you created. You should receive a check for each of the steps. Finally, go to the data storage container and make sure a blob was created with the right information. If it's there, great job!! We can move on to the last and final part of this project.
 
 
 
