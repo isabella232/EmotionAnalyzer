@@ -144,15 +144,13 @@ Now that you've created a website where you can upload photos and they'll be pla
 
 10. Now, the last step for the Logic App is to make an action that responds to each `body` that the Face API detects. For each `body` ,  choose the action to have a blob created. Simply put Image Info within the blob for now. 
 
-   ![](images/earlyblob.PNG)
+       ![](images/earlyblob.PNG)Make sure the blob name is `Name`. This will be important to easily locate the data you got from the Face API! 
 
-   Make sure the blob name is `List of Files Name`. This will be important to easily locate the data you got from the Face API! 
-
-   For all the blob content, `Name`, `Age`,`Gender`,`Moustache`, and `Beard` will show up as dynamic content that you can simply choose from the dropdown menu inside the portal. However, for the emotions, there is a more complicated process.
+    For all the blob content, `Name`, `Age`,`Gender`,`Moustache`, and `Beard` will show up as dynamic content that you can simply choose from the dropdown menu inside the portal. However, for the emotions, there is a more complicated process. Makes me emotional just thinking about it `:(`.
 
 11. Switch to code view! Up until this point, we have used Logic App Designer. However, to have your Face API detect emotions, we must modify the code slightly.  Inside code view, go to line 20. Under this line, the Face API is told to gather information from the photo. Under the default steps added by the Logic App's detect faces command, age, gender, head pose, smile, facial hair, and glasses are automatically detected. Add emotion to this list. 
 
-    ![](images/codesnip.png)
+    ![](images/snippet.png)
 
 12. Under line 36, now we need to make the blob actually display all the emotions you want displayed. Simply copy and paste this line of code to replace the old one, and your body will now show many more emotions. 
 
